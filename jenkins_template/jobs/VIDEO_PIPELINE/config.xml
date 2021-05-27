@@ -1,0 +1,354 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>14</daysToKeep>
+        <numToKeep>-1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CALLBACK_URL</name>
+          <description>Callback URL</description>
+          <defaultValue>https://google.com/</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>EVENT_INSTANCE_ID</name>
+          <description></description>
+          <defaultValue>874</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VIMEO_VIDEO_ID</name>
+          <description>The ID of the Vimeo video to process. E.g. 498331638, if the link to the video is https://vimeo.com/498331638</description>
+          <defaultValue>498331638</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PREROLL_VIMEO_VIDEO_ID</name>
+          <description>The ID of the Vimeo video to process. E.g. 525647030, if the link to the video is https://vimeo.com/525647030</description>
+          <defaultValue>530598123</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>POSTROLL_VIMEO_VIDEO_ID</name>
+          <description>The ID of the Vimeo video to process. E.g. 525647030, if the link to the video is https://vimeo.com/525647030</description>
+          <defaultValue>530598123</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>START</name>
+          <description>The timestamp to trim the beginning of the video off in seconds.</description>
+          <defaultValue>10</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>DURATION</name>
+          <description>The remaining duration of the video to be left after trimming.</description>
+          <defaultValue>60</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VIDEO_NAME</name>
+          <description>The name to upload the result video with.</description>
+          <defaultValue>VIDEO NAME with INSTRUCTOR NAME</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VY_HOST_NAME</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VY_CATEGORIES</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VY_EQUIPMENT</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VY_LEVEL</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>EVENT_DATE</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>THUMBNAIL_TYPE</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>THUMBNAIL_URL</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>vyva</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <authToken>secret-token</authToken>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>php ~/vimeo-cli/index.php report:started</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.40">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>VIMEO_VIDEO_ID=${VIMEO_VIDEO_ID}</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>DOWNLOAD_VIDEO</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+          <block>
+            <buildStepFailureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </buildStepFailureThreshold>
+            <unstableThreshold>
+              <name>UNSTABLE</name>
+              <ordinal>1</ordinal>
+              <color>YELLOW</color>
+              <completeBuild>true</completeBuild>
+            </unstableThreshold>
+            <failureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </failureThreshold>
+          </block>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>VIMEO_VIDEO_ID=${PREROLL_VIMEO_VIDEO_ID}</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>DOWNLOAD_VIDEO</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+          <block>
+            <buildStepFailureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </buildStepFailureThreshold>
+            <unstableThreshold>
+              <name>UNSTABLE</name>
+              <ordinal>1</ordinal>
+              <color>YELLOW</color>
+              <completeBuild>true</completeBuild>
+            </unstableThreshold>
+            <failureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </failureThreshold>
+          </block>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+    <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.40">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>VIMEO_VIDEO_ID=${POSTROLL_VIMEO_VIDEO_ID}</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>DOWNLOAD_VIDEO</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+          <block>
+            <buildStepFailureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </buildStepFailureThreshold>
+            <unstableThreshold>
+              <name>UNSTABLE</name>
+              <ordinal>1</ordinal>
+              <color>YELLOW</color>
+              <completeBuild>true</completeBuild>
+            </unstableThreshold>
+            <failureThreshold>
+              <name>FAILURE</name>
+              <ordinal>2</ordinal>
+              <color>RED</color>
+              <completeBuild>true</completeBuild>
+            </failureThreshold>
+          </block>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+    <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.40">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>PROGRESS_DETAILS=&quot;Source videos downloaded&quot;</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>REPORT_PROGRESS</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+    <hudson.tasks.Shell>
+      <command>echo &quot;Trimming video...&quot;
+
+WD=$(pwd)
+cd ~
+
+docker run --rm -v $(pwd):$(pwd) -w $(pwd) \
+  jrottenberg/ffmpeg:4.1-scratch -stats -y \
+  -ss ${START} \
+  -i &quot;videos/${VIMEO_VIDEO_ID}.mp4&quot; \
+  -to ${DURATION} \
+  -af &apos;equalizer=f=70:t=h:w=140:g=8,equalizer=f=3200:t=o:w=2.4:g=3,mcompand=0.001\,0.1 6 -40/-27\,-20/-20\,20/-7 79 0 0 1 | 0.001\,0.1 6 -40/-25\,-20/-15\,20/-2.5 1150 | 0.001\,0.1 6 -40/-25\,-20/-15\,20/-2.5 6900 | 0.001\,0.1 6 -40/-24\,-20/-17\,20/-4 22000 0 0 13&apos; \
+  -c:v copy \
+  &quot;videos/${VIMEO_VIDEO_ID}-trimmed.mp4&quot;
+
+rm &quot;videos/${VIMEO_VIDEO_ID}.mp4&quot;
+
+cd $WD
+  
+</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>echo &quot;Adding rolls...&quot;
+
+WD=$(pwd)
+cd ~
+  
+docker run --rm -v $(pwd):$(pwd) -w $(pwd) \
+  jrottenberg/ffmpeg:4.1-scratch -stats -y \
+  -i &quot;videos/${PREROLL_VIMEO_VIDEO_ID}.mp4&quot; \
+  -i &quot;videos/${VIMEO_VIDEO_ID}-trimmed.mp4&quot; \
+  -i &quot;videos/${POSTROLL_VIMEO_VIDEO_ID}.mp4&quot; \
+  -b:a 253k \
+  -filter_complex &quot;[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=3:v=1:a=1 [v] [a]&quot; \
+  -map &quot;[v]&quot; -map &quot;[a]&quot; &quot;videos/${VIMEO_VIDEO_ID}-combined.mp4&quot; -y
+
+
+rm &quot;videos/${VIMEO_VIDEO_ID}-trimmed.mp4&quot;
+
+cd $WD</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.40">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>PROGRESS_DETAILS=&quot;Video processed. Uploading...&quot;</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>REPORT_PROGRESS</projects>
+          <condition>ALWAYS</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+          <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+        </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+    <hudson.tasks.Shell>
+      <command>echo &quot;Uploading video...&quot;
+
+
+VIDEO_ID=$(php ~/vimeo-cli/index.php video:upload ~/videos/${VIMEO_VIDEO_ID}-combined.mp4 &quot;${VIDEO_NAME} with ${VY_HOST_NAME}&quot;)
+rm ~/videos/${VIMEO_VIDEO_ID}-combined.mp4
+
+# Store in the ~/logs/ to be accessible in Post-build jobs.
+echo &quot;${VIDEO_ID}&quot; &gt; ~/logs/${VIMEO_VIDEO_ID}.log
+</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.40">
+      <configs>
+        <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
+          </configs>
+          <projects>REPORT_COMPLETE</projects>
+          <condition>UNSTABLE_OR_BETTER</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+        </hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+        <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+          <configs>
+            <hudson.plugins.parameterizedtrigger.CurrentBuildParameters/>
+            <hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+              <properties>FAILURE_REASON=${BUILD_URL}</properties>
+              <textParamValueOnNewLine>false</textParamValueOnNewLine>
+            </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
+          </configs>
+          <projects>REPORT_FAILURE</projects>
+          <condition>FAILED</condition>
+          <triggerWithNoParameters>false</triggerWithNoParameters>
+          <triggerFromChildProjects>false</triggerFromChildProjects>
+        </hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
+      </configs>
+    </hudson.plugins.parameterizedtrigger.BuildTrigger>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.12"/>
+  </buildWrappers>
+</project>

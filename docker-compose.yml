@@ -38,3 +38,8 @@ services:
     volumes_from:
       - "nginx-proxy"
 
+  puppeteer:
+    image: zenato/puppeteer-renderer
+    ports:
+     - "3000"
+    restart: always

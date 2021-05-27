@@ -1,0 +1,39 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<slave>
+  <name>Worker</name>
+  <description></description>
+  <remoteFS>/home/vyva</remoteFS>
+  <numExecutors>4</numExecutors>
+  <mode>EXCLUSIVE</mode>
+  <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
+  <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.31.5">
+    <host>localhost</host>
+    <port>22</port>
+    <credentialsId>vyva-worker</credentialsId>
+    <launchTimeoutSeconds>60</launchTimeoutSeconds>
+    <maxNumRetries>10</maxNumRetries>
+    <retryWaitTime>15</retryWaitTime>
+    <sshHostKeyVerificationStrategy class="hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy"/>
+    <tcpNoDelay>true</tcpNoDelay>
+  </launcher>
+  <label>vyva</label>
+  <nodeProperties>
+    <hudson.slaves.EnvironmentVariablesNodeProperty>
+      <envVars serialization="custom">
+        <unserializable-parents/>
+        <tree-map>
+          <default>
+            <comparator class="hudson.util.CaseInsensitiveComparator"/>
+          </default>
+          <int>3</int>
+          <string>AUTH_PASS</string>
+          <string></string>
+          <string>AUTH_TOKEN</string>
+          <string></string>
+          <string>AUTH_USER</string>
+          <string></string>
+        </tree-map>
+      </envVars>
+    </hudson.slaves.EnvironmentVariablesNodeProperty>
+  </nodeProperties>
+</slave>
