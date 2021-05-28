@@ -16,9 +16,9 @@ services:
     volumes:
       - "./etc/nginx/conf.d/:/etc/nginx/conf.d/"
     environment:
-      VIRTUAL_HOST: example.com
-      LETSENCRYPT_HOST: example.com
-      LETSENCRYPT_EMAIL: youremail@example.com
+      - VIRTUAL_HOST
+      - LETSENCRYPT_HOST
+      - LETSENCRYPT_EMAIL
 
   nginx-proxy:
     image: jwilder/nginx-proxy
