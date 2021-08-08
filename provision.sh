@@ -160,7 +160,7 @@ install_vyva() {
     echo-green '# Jenkins provisioning                   #'
     echo-green '##########################################'
     cd ~/vyva
-    VIRTUAL_HOST=${DOMAIN_NAME} ./install.sh
+    VIRTUAL_HOST=${DOMAIN_NAME} ; sudo ./install.sh
     echo ''
     echo-yellow  "############################################################"
     echo-yellow  "# Visit Jenkins at https://${DOMAIN_NAME}/"
