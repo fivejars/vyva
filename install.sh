@@ -10,6 +10,7 @@ rm -rf jenkins_home
 # Copy jobs definition.
 cp -r jenkins_template jenkins_home
 chmod +x jenkins_home/install_plugins.sh
+chown -R 1000:1000 jenkins_home
 sed -i "s/localhost/${VIRTUAL_HOST}/" jenkins_home/nodes/Worker/config.xml
 
 # Get the NGINX, Jenkins and Puppeteer up.
